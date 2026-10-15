@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusAlert — SDSU Safety Reporting</title>
+  <meta name="description" content="CampusAlert: SOS calling, non-emergency reports, mental health resources and live location sharing for South Dakota State students." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- The phone frame. Every "screen" is a <section>; app.js shows one at a time. -->
+  <main id="phone">
+
+    <!-- ========== LOGIN ========== -->
+    <section class="screen" id="screen-login">
+      <div class="pad center-col">
+        <div class="logo">⛨</div>
+        <h1 class="big">CampusAlert</h1>
+        <p class="muted">Fast, safe incident reporting for SDSU students.</p>
+      </div>
+      <form class="pad stack" id="login-form">
+        <label class="field">University Email
+          <input type="email" id="login-email" required placeholder="you@jacks.sdstate.edu" />
+        </label>
+        <button class="btn primary" type="submit">Sign in</button>
+        <button class="btn outline" type="button" id="btn-demo">Continue as demo student</button>
+        <button class="btn ghost" type="button" data-go="signup">New here? Create an account</button>
+      </form>
+    </section>
+
+    <!-- ========== SIGNUP ========== -->
+    <section class="screen" id="screen-signup">
+      <header class="topbar"><button class="back" data-go="login">‹</button><h2>Create account</h2><span></span></header>
+      <form class="pad stack" id="signup-form">
+        <label class="field">Full Name<input name="name" required /></label>
+        <label class="field">Student ID<input name="studentId" required /></label>
+        <label class="field">University Email<input name="email" type="email" required /></label>
+        <label class="field">Contact Number<input name="phone" type="tel" required /></label>
+        <h3 class="section-title">Emergency Contact</h3>
+        <label class="field">Name<input name="emergencyName" required /></label>
+        <label class="field">Phone<input name="emergencyPhone" type="tel" required /></label>
+        <button class="btn primary" type="submit">Create account</button>
+      </form>
+    </section>
+
+    <!-- ========== HOME ========== -->
+    <section class="screen" id="screen-home">
+      <header class="topbar">
+        <span></span>
+        <h2>CampusAlert</h2>
+        <button class="avatar" data-go="profile" id="avatar">K</button>
+      </header>
+      <div class="pad stack">
+        <p class="muted">Hi <b id="home-name"></b>, how can we help?</p>
+
+        <!-- Smaller SOS card: press and HOLD the circle for 2 seconds -->
+        <div class="sos-card">
+          <div>
+            <span class="badge sos">Emergency</span>
+            <h3>Report an Emergency</h3>
+            <p class="small">Hold the button 2s to call for help</p>
+          </div>
+          <button class="sos-btn" id="sos-btn" aria-label="Hold to call for help">
+            <svg viewBox="0 0 100 100"><circle class="ring" cx="50" cy="50" r="46" /></svg>
+            <span>SOS</span>
+          </button>
+        </div>
+
+        <button class="action calm" data-go="categories">
+          <span class="badge calm">Non-life-threatening</span>
+          <b>Report a Non-Emergency Issue</b>
+          <span class="small">Dorm, personal, injury, mental health…</span>
+        </button>
+
+        <button class="action signal" id="btn-location">
+          <span class="badge signal">● Live</span>
+          <b>Send my Live Location</b>
+          <span class="small">Shares your GPS position by text to <span class="help-number"></span></span>
+        </button>
+
+        <h3 class="section-title">Recent reports</h3>
+        <ul id="report-list" class="report-list"></ul>
+      </div>
+    </section>
+
+    <!-- ========== CALLING ========== -->
+    <section class="screen dark" id="screen-calling">
+      <div class="pad center-col grow">
+        <span class="badge sos pulse">Connecting</span>
+        <div class="call-icon">📞</div>
+        <h1 class="big">Calling for help…</h1>
+        <p class="help-number big-num"></p>
+        <p class="timer" id="call-timer">00:00</p>
+        <p class="small muted-light">If your phone didn't start the call, tap below.</p>
+      </div>
+      <div class="pad stack">
+        <a class="btn sos" id="call-link">Call again</a>
+        <button class="btn outline-light" data-go="emergency-form">Continue to quick report</button>
+        <button class="btn ghost-light" data-go="home">End</button>
+      </div>
+    </section>
+
+    <!-- ========== EMERGENCY QUICK REPORT ========== -->
+    <section class="screen" id="screen-emergency-form">
+      <header class="topbar sos"><button class="back" data-go="home">‹</button><h2>Quick report</h2><span></span></header>
+      <form class="pad stack" id="emergency-form">
+        <label class="field">Location<input name="location" class="loc-input" required /></label>
+        <button type="button" class="btn outline small-btn use-gps">📍 Use my GPS</button>
+        <label class="field">What's happening? (one line)<input name="description" required maxlength="120" /></label>
+        <button class="btn sos" type="submit">Send report</button>
+      </form>
+    </section>
+
+    <!-- ========== NON-EMERGENCY CATEGORIES ========== -->
+    <section class="screen" id="screen-categories">
+      <header class="topbar calm"><button class="back" data-go="home">‹</button><h2>Non-emergency</h2><span></span></header>
+      <div class="pad stack">
+        <p class="muted">What kind of issue is it?</p>
+        <div class="grid2">
+          <button class="cat" data-cat="Dorm Issue">🏠<b>Dorm Issue</b></button>
+          <button class="cat" data-cat="Personal Issue">🙋<b>Personal Issue</b></button>
+          <button class="cat" data-cat="Physical Injury">🩹<b>Physical Injury</b></button>
+          <button class="cat mental" id="btn-mental">💚<b>Mental Health</b><span class="small">Opens SDSU Counseling</span></button>
+          <button class="cat" data-cat="Other">📝<b>Other</b></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== NON-EMERGENCY FORM (only location + people involved) ========== -->
+    <section class="screen" id="screen-nonemergency-form">
+      <header class="topbar calm"><button class="back" data-go="categories">‹</button><h2>Report issue</h2><span></span></header>
+      <form class="pad stack" id="nonemergency-form">
+        <span class="badge calm" id="cat-tag"></span>
+        <label class="field">Location<input name="location" class="loc-input" required placeholder="Building / room" /></label>
+        <button type="button" class="btn outline small-btn use-gps">📍 Use my GPS</button>
+        <label class="field">Who is involved?<input name="people" required placeholder="Names or description" /></label>
+        <button class="btn calm" type="submit">Submit report</button>
+      </form>
+    </section>
+
+    <!-- ========== LOCATION CONFIRM ========== -->
+    <section class="screen" id="screen-location">
+      <header class="topbar"><button class="back" data-go="home">‹</button><h2>Live location</h2><span></span></header>
+      <div class="pad stack grow">
+        <div class="map-box"><div class="pin">📍</div><p id="loc-status">Finding your location…</p></div>
+        <p class="muted center">Send your location to <b class="help-number"></b>?</p>
+        <a class="btn sos" id="sms-link">Send by text</a>
+        <button class="btn ghost" data-go="home">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ========== CONFIRMATION (shared) ========== -->
+    <section class="screen" id="screen-done">
+      <div class="pad center-col grow">
+        <div class="check" id="done-check">✓</div>
+        <h1 class="big" id="done-title"></h1>
+        <p class="muted" id="done-sub"></p>
+        <div class="rows" id="done-rows"></div>
+      </div>
+      <div class="pad"><button class="btn primary" data-go="home">Back to home</button></div>
+    </section>
+
+    <!-- ========== PROFILE ========== -->
+    <section class="screen" id="screen-profile">
+      <header class="topbar"><button class="back" data-go="home">‹</button><h2>Profile</h2><span></span></header>
+      <form class="pad stack" id="profile-form">
+        <label class="field">Full Name<input name="name" /></label>
+        <label class="field">Student ID<input name="studentId" /></label>
+        <label class="field">Email<input name="email" /></label>
+        <label class="field">Contact Number<input name="phone" /></label>
+        <h3 class="section-title">Emergency Contact</h3>
+        <label class="field">Name<input name="emergencyName" /></label>
+        <label class="field">Phone<input name="emergencyPhone" /></label>
+        <button class="btn primary" type="submit">Save</button>
+        <button class="btn ghost" type="button" id="btn-signout">Sign out</button>
+      </form>
+    </section>
+
+  </main>
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
