@@ -1,0 +1,38 @@
+# Serves the static site and forwards /api/* to the backend container.
+# TLS is handled by the Cloudflare Tunnel in front, so Caddy speaks plain HTTP inside
+# the compose network.
+{
+	auto_https off
+	admin off
+	servers {
+		# Requests arrive from the cloudflared container on the private compose network.
+		# Trust its X-Forwarded-For so the API sees the real client IP for rate limits.
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	encode gzip
+
+	handle /api/* {
+		reverse_proxy api:5000
+	}
+
+	handle {
+		root * /srv/site
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		X-Frame-Options DENY
+		-Server
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

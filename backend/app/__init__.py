@@ -46,7 +46,9 @@ def create_app(config: type[Config] | None = None) -> Flask:
     _add_security_headers(app)
 
     if proxies := app.config["TRUSTED_PROXIES"]:
-        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=proxies, x_proto=proxies, x_host=proxies)
+        # Each proxy appends to X-Forwarded-For, so trust that many hops. Proto and host are
+        # passed through unchanged by the chain, so only the last value is used.
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=proxies, x_proto=1, x_host=1)
     return app
 
 

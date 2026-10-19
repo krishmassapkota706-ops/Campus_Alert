@@ -1,0 +1,6 @@
+# Build context for deploy/web/Dockerfile is the repo root: send only the site files.
+*
+!index.html
+!app.js
+!style.css
+!deploy/web/
