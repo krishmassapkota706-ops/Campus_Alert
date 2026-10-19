@@ -1,0 +1,21 @@
+[project]
+name = "reportsdstate-backend"
+version = "0.1.0"
+description = "Flask REST API for the ReportSDState / CampusAlert prototype"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101"]  # assert is fine in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]  # hard-coded test passwords

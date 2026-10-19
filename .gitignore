@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Local database files and backups
+backend/instance/
+*.db
+*.sqlite3
+backups/
+
+# Project documents are kept outside the repository for now
+docs/*.docx
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
