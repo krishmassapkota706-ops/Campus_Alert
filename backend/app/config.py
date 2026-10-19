@@ -61,6 +61,12 @@ class Config:
     CAMPUS_POLICE_NUMBER = os.environ.get("CAMPUS_POLICE_NUMBER", "+16056885117")
     CRISIS_LINE_NUMBER = os.environ.get("CRISIS_LINE_NUMBER", "988")
 
+    # Location-sharing SMS: mock | twilio. DEMO_MODE always forces mock.
+    SMS_MODE = os.environ.get("SMS_MODE", "mock")
+    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
+    TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
+    TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER", "")
+
     # Secrets that must be provided through the environment in production.
     REQUIRED_SECRETS: tuple[str, ...] = (
         "SECRET_KEY",
@@ -100,7 +106,10 @@ class ProductionConfig(Config):
 
     @classmethod
     def validate(cls) -> None:
-        missing = [name for name in cls.REQUIRED_SECRETS if not os.environ.get(name)]
+        required = list(cls.REQUIRED_SECRETS)
+        if cls.SMS_MODE == "twilio" and not cls.DEMO_MODE:
+            required += ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER"]
+        missing = [name for name in required if not os.environ.get(name)]
         if missing:
             raise RuntimeError(
                 "Missing required environment variables for production: " + ", ".join(missing)

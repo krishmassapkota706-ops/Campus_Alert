@@ -162,6 +162,26 @@ Call this when an emergency call button is used. It returns the number to dial.
 
 If this request fails (offline, signed out), dial the `dial_number` from `/emergency/config` anyway. Never block an emergency call on the backend.
 
+## Location sharing
+
+### `POST /location/share` 🔒
+Sends **one** text with the user's current location to one of their own emergency contacts.
+
+Flow: user taps "Share location" → app asks for location permission (only now) → app shows the **recipient name and number** → user taps Send → app calls this endpoint.
+```json
+{ "contact_id": 3, "latitude": 44.31969, "longitude": -96.78428, "confirmed": true }
+```
+- `confirmed` must be JSON `true`. Anything else returns `422` and sends nothing. If the user cancels, don't call the endpoint at all.
+- Coordinates are used for this one message and then thrown away. They're never stored or logged.
+- Demo mode simulates the text (`"status": "simulated"`) and sends nothing real.
+- Rate limit: 5 per minute, 20 per hour, per user.
+
+→ `200 {"status": "sent" | "simulated", "recipient": {"id", "name", "phone"}, "message": "...", "stored": false}`
+· `404` not your contact · `422` · `429`
+· `503 sms_unavailable`: the live provider failed. `error.sms_link` is an `sms:` URI with the same message; open it so the phone's messaging app can send the text.
+
+If location permission is denied, skip this call and keep the rest of the emergency screen working.
+
 ## Admin (maintainer role only)
 
 Students get `403`.
