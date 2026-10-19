@@ -29,6 +29,13 @@ class UTCDateTime(TypeDecorator):
         return value.replace(tzinfo=UTC) if value is not None else None
 
 
+def render_alembic_item(type_, obj, _autogen_context):
+    """Write UTCDateTime as a plain DateTime in migrations, so they don't import app code."""
+    if type_ == "type" and isinstance(obj, UTCDateTime):
+        return "sa.DateTime()"
+    return False
+
+
 def isoformat(value: datetime | None) -> str | None:
     return value.isoformat().replace("+00:00", "Z") if value else None
 

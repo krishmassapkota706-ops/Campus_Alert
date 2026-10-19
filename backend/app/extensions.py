@@ -3,6 +3,7 @@
 from flask_jwt_extended import JWTManager
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData, event
 from sqlalchemy.engine import Engine
@@ -25,6 +26,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 jwt = JWTManager()
 limiter = Limiter(key_func=get_remote_address)
+migrate = Migrate()
 
 
 @event.listens_for(Engine, "connect")

@@ -67,6 +67,13 @@ class Config:
     TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
     TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER", "")
 
+    # Where `flask backup-db` writes. Empty means backend/instance/backups/.
+    BACKUP_DIR = os.environ.get("BACKUP_DIR", "")
+
+    # Number of reverse proxies in front of the app (Caddy, nginx, Cloudflare Tunnel).
+    # Needed so rate limits see the real client IP. 0 = the app is exposed directly.
+    TRUSTED_PROXIES = int(os.environ.get("TRUSTED_PROXIES", "0"))
+
     # Secrets that must be provided through the environment in production.
     REQUIRED_SECRETS: tuple[str, ...] = (
         "SECRET_KEY",
