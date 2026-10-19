@@ -1,9 +1,28 @@
 """Request-body validation with pydantic, mapped onto the API error format."""
 
+from typing import Annotated
+
+import phonenumbers
 import pydantic
 from flask import request
 
 from .errors import ValidationError
+
+
+def normalize_phone(value: str) -> str:
+    """Parse a phone number (US by default) and return it in E.164 form, e.g. +16055550199."""
+    try:
+        number = phonenumbers.parse(value, "US")
+    except phonenumbers.NumberParseException:
+        raise ValueError("Enter a valid phone number.") from None
+    if not phonenumbers.is_valid_number(number):
+        raise ValueError("Enter a valid phone number.")
+    return phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.E164)
+
+
+PhoneNumber = Annotated[
+    str, pydantic.Field(max_length=30), pydantic.AfterValidator(normalize_phone)
+]
 
 
 class Schema(pydantic.BaseModel):

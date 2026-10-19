@@ -64,16 +64,56 @@ Revokes the token sent and its refresh token. → `204`
 ```
 `200` · `400 invalid_code`. Signs out every existing session for that account.
 
-## Me
+## Me (profile)
 
 ### `GET /me` 🔒
 `200 User`
+
+### `PATCH /me` 🔒
+Send only the fields you're changing:
+```json
+{ "name": "Jack R.", "phone": "(605) 555-0142" }
+```
+Phone numbers are normalized to E.164 (`+16055550142`); send `"phone": null` to remove it. Email and role can't be changed. → `200 User` · `422`
+
+### `POST /me/password` 🔒
+```json
+{ "current_password": "...", "new_password": "..." }
+```
+`200 Tokens`. Other sessions are signed out, so store the new tokens on this device. · `422` wrong current password or weak new password
+
+## Emergency contacts
+
+Each user can save up to 5. Another user's contact returns `404`.
+
+### `GET /contacts` 🔒
+`200 {"contacts": [Contact, ...]}`
+
+### `POST /contacts` 🔒
+```json
+{ "name": "Mom", "phone": "605-555-0199", "relationship": "Parent" }
+```
+`relationship` is optional. → `201 Contact` · `409 contact_limit` · `422` invalid phone
+
+### `GET /contacts/<id>` 🔒
+`200 Contact` · `404`
+
+### `PATCH /contacts/<id>` 🔒
+Any of `name`, `phone`, `relationship`. → `200 Contact` · `404` · `422`
+
+### `DELETE /contacts/<id>` 🔒
+`204` · `404`
 
 ## Shapes
 
 **Tokens**
 ```json
 { "access_token": "...", "refresh_token": "...", "token_type": "Bearer", "expires_in": 900 }
+```
+
+**Contact**
+```json
+{ "id": 3, "name": "Mom", "phone": "+16055550199", "relationship": "Parent" }
 ```
 
 **User**
