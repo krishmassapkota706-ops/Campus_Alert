@@ -4,6 +4,7 @@ flask-cors==6.0.5
 Flask-JWT-Extended==4.7.4
 Flask-Limiter==4.1.1
 Flask-SQLAlchemy==3.1.1
+phonenumbers==9.0.41
 pydantic==2.14.1
 python-dotenv==1.2.4
 SQLAlchemy==2.1.5

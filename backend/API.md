@@ -76,6 +76,11 @@ Revokes the token sent and its refresh token. → `204`
 { "access_token": "...", "refresh_token": "...", "token_type": "Bearer", "expires_in": 900 }
 ```
 
+**Contact**
+```json
+{ "id": 3, "name": "Mom", "phone": "+16055550199", "relationship": "Parent" }
+```
+
 **User**
 ```json
 { "id": 1, "email": "jack@jacks.sdstate.edu", "name": "Jack Rabbit", "phone": null, "role": "student", "email_verified": true, "created_at": "2026-10-19T15:04:05.123456Z" }
