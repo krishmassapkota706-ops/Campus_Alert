@@ -24,6 +24,8 @@ class User(db.Model):
     phone: Mapped[str | None] = mapped_column(String(20))
     role: Mapped[Role] = mapped_column(str_enum(Role), default=Role.STUDENT)
     email_verified_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+    # Bumped on password reset; tokens carrying an older version are rejected.
+    token_version: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
 

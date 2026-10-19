@@ -21,6 +21,10 @@ Seeded accounts (synthetic, development only): `demo.student@jacks.sdstate.edu` 
 
 Check it's running: <http://localhost:5000/api/v1/health>
 
+In development, verification and password-reset emails are printed to the server log (`MAIL_BACKEND=console`) so you can copy the code.
+
+See [API.md](API.md) for every endpoint, request body, and response.
+
 ## Tests and linting
 
 ```bash
@@ -41,7 +45,8 @@ backend/
     validation.py   pydantic request-body validation
     extensions.py   SQLAlchemy instance (SQLite foreign keys enabled)
     models/         users, emergency_contacts, reports
-    security/       field-level encryption for reporter IDs
+    security/       JWT setup, role_required, field-level encryption
+    services/       business logic (auth, mailer) called by the API routes
     cli.py          init-db / seed-db commands
     seed.py         synthetic demo data
     api/            versioned blueprints, mounted under /api/v1
@@ -69,6 +74,8 @@ All configuration comes from environment variables (see `.env.example`). In prod
 |---|---|---|
 | `users` | Student / maintainer accounts | Passwords hashed (werkzeug scrypt). `role` is `student` or `maintainer`. |
 | `emergency_contacts` | A user's saved contacts | Deleted with the user. Phone stored as E.164. |
+| `verification_codes` | Email-verification and password-reset codes | Only a keyed hash of the code is stored. 15-minute expiry, 5 attempts. |
+| `revoked_tokens` | JWT IDs revoked by logout | Safe to prune after `expires_at`. |
 | `reports` | Submitted reports | Reporter stored only as `reporter_ref_enc` (Fernet ciphertext) and `reporter_ref_idx` (HMAC blind index for "my reports"). No plain user ID. |
 
 All timestamps are stored in UTC and returned as ISO-8601 with a `Z` suffix.
