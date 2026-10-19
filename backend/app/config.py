@@ -54,6 +54,13 @@ class Config:
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
     RATELIMIT_HEADERS_ENABLED = True
 
+    # Emergency workflow. In demo mode every call button dials DEMO_CALL_NUMBER instead of
+    # the real number, so no real emergency call is placed (RD US-07, NFR-3.2.13).
+    DEMO_MODE = os.environ.get("DEMO_MODE", "true").lower() in ("1", "true", "yes")
+    DEMO_CALL_NUMBER = os.environ.get("DEMO_CALL_NUMBER", "+16055550100")  # fictional 555 number
+    CAMPUS_POLICE_NUMBER = os.environ.get("CAMPUS_POLICE_NUMBER", "+16056885117")
+    CRISIS_LINE_NUMBER = os.environ.get("CRISIS_LINE_NUMBER", "988")
+
     # Secrets that must be provided through the environment in production.
     REQUIRED_SECRETS: tuple[str, ...] = (
         "SECRET_KEY",
@@ -82,6 +89,8 @@ class TestingConfig(Config):
     MAIL_BACKEND = "memory"
     RATELIMIT_ENABLED = False
     # Fast, weak hashing so the suite runs quickly. Never use outside tests.
+    DEMO_MODE = True
+    DEMO_CALL_NUMBER = "+16055550100"
     PASSWORD_HASH_METHOD = "pbkdf2:sha256:1000"  # noqa: S105 (algorithm name)
 
 

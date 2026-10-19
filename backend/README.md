@@ -13,7 +13,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 cp .env.example .env
 flask --app wsgi init-db      # create tables in backend/instance/reportsdstate.db
-flask --app wsgi seed-db      # optional: synthetic demo accounts and reports
+flask --app wsgi seed-db      # synthetic demo accounts/reports + SDSU resource directory
 flask --app wsgi run --debug
 ```
 
@@ -47,7 +47,8 @@ backend/
     models/         users, emergency_contacts, reports
     security/       JWT setup, role_required, field-level encryption
     services/       business logic (auth, mailer) called by the API routes
-    cli.py          init-db / seed-db commands
+    data/           resources.json (SDSU resource directory, with sources)
+    cli.py          init-db / seed-db / seed-resources commands
     seed.py         synthetic demo data
     api/            versioned blueprints, mounted under /api/v1
   tests/            pytest suite
@@ -76,6 +77,14 @@ All configuration comes from environment variables (see `.env.example`). In prod
 | `emergency_contacts` | A user's saved contacts | Deleted with the user. Phone stored as E.164. |
 | `verification_codes` | Email-verification and password-reset codes | Only a keyed hash of the code is stored. 15-minute expiry, 5 attempts. |
 | `revoked_tokens` | JWT IDs revoked by logout | Safe to prune after `expires_at`. |
+| `resources` | Public SDSU and crisis contacts | Loaded from `app/data/resources.json`; each entry records its source URL and date checked. |
+| `emergency_events` | An emergency call button was used | Action + timestamp only; user stored encrypted. No location. |
 | `reports` | Submitted reports | Reporter stored only as `reporter_ref_enc` (Fernet ciphertext) and `reporter_ref_idx` (HMAC blind index for "my reports"). No plain user ID. |
 
 All timestamps are stored in UTC and returned as ISO-8601 with a `Z` suffix.
+
+## Demo mode
+
+`DEMO_MODE=true` (the default) swaps every number the app would dial for `DEMO_CALL_NUMBER`, so no real call reaches UPD, 911, or 988 during grading. Displayed numbers stay real. Set `DEMO_CALL_NUMBER` to a phone the team controls.
+
+To update the resource directory, edit `app/data/resources.json` and run `flask --app wsgi seed-resources --replace`.

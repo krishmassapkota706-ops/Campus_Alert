@@ -1,0 +1,115 @@
+{
+  "_comment": "Public SDSU and crisis resources served by GET /api/v1/resources. Load with `flask --app wsgi seed-resources --replace`. Check each source_url before a demo and update verified_on.",
+  "resources": [
+    {
+      "category": "emergency",
+      "name": "Emergency Services (911)",
+      "description": "Immediate danger, fire, or a medical emergency. This app does not replace 911.",
+      "phone": "911",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/university-wellbeing/student-health-clinic-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "emergency",
+      "name": "SDSU University Police Department",
+      "description": "Campus police and communications center, staffed 24/7 including holidays. Dial 111 from a campus phone.",
+      "phone": "+16056885117",
+      "url": "https://www.sdstate.edu/safety-security/university-police",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/safety-security/university-police",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "safety",
+      "name": "UPD Safety Escort",
+      "description": "Free 24/7 escort to or from your car, residence hall, the library, or anywhere on or next to campus.",
+      "phone": "+16056885117",
+      "url": "https://www.sdstate.edu/safety-security/university-police/safety-escort",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/safety-security/university-police/safety-escort",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "crisis",
+      "name": "988 Suicide & Crisis Lifeline",
+      "description": "Free, confidential support for anyone in emotional distress. Call, text, or chat.",
+      "phone": "988",
+      "sms": "988",
+      "url": "https://988lifeline.org",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "crisis",
+      "name": "After-hours on-call counselor (via UPD)",
+      "description": "During the academic year, University Police can reach an on-call SDSU counselor after hours.",
+      "phone": "+16056885117",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "crisis",
+      "name": "East Central Behavioral Health Center",
+      "description": "Brookings community mental health center.",
+      "phone": "+16056972850",
+      "source_url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "health",
+      "name": "SDSU Counseling Services",
+      "description": "Free counseling for SDSU students at the Miller Wellness Center. Walk-in screenings Monday to Friday, 8:30 to 11 a.m. and 12:30 to 3 p.m.",
+      "phone": "+16056979355",
+      "url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "source_url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "health",
+      "name": "SDSU Student Health Clinic",
+      "description": "Student health clinic at 1440 North Campus Dr. Call and select option 3 for appointments. Monday 9 a.m. to 5 p.m., Tuesday to Friday 8 a.m. to 5 p.m.",
+      "phone": "+16056979355",
+      "url": "https://www.sdstate.edu/university-wellbeing/student-health-clinic-services",
+      "source_url": "https://www.sdstate.edu/university-wellbeing/student-health-clinic-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "health",
+      "name": "Brookings Health System Emergency Department",
+      "description": "Hospital emergency department at 300 22nd Ave. S., open 24/7.",
+      "phone": "+16056969000",
+      "available_24_7": true,
+      "source_url": "https://www.sdstate.edu/university-wellbeing/student-health-clinic-services",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "housing",
+      "name": "Housing and Residential Life",
+      "description": "Residence hall questions and maintenance concerns during business hours. Routine work orders go through the University Housing Portal on MyState.",
+      "phone": "+16056885148",
+      "url": "https://housingapp.sdstate.edu/StarRezPortal/",
+      "source_url": "https://www.sdstate.edu/housing-residential-life/university-apartments",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "housing",
+      "name": "Facilities and Services Front Desk",
+      "description": "Campus building maintenance. Submit an online work request or call the front desk.",
+      "phone": "+16056884136",
+      "url": "https://www.sdstate.edu/facilities-services/campus-maintenance",
+      "source_url": "https://www.sdstate.edu/facilities-services/campus-maintenance",
+      "verified_on": "2026-10-19"
+    },
+    {
+      "category": "safety",
+      "name": "Brookings Police Department (non-emergency)",
+      "description": "City police non-emergency line for off-campus concerns.",
+      "phone": "+16056922113",
+      "source_url": "https://www.sdstate.edu/university-wellbeing/counseling-services",
+      "verified_on": "2026-10-19"
+    }
+  ]
+}

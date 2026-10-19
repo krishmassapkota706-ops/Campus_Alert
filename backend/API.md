@@ -126,6 +126,42 @@ Your own reports, newest first. Query: `category`, `page` (default 1), `per_page
 ### `GET /reports/<reference_id>` 🔒
 `200 Report` · `404` (not found or not yours)
 
+## Resources (public)
+
+No sign-in needed, so crisis info stays reachable even when signed out.
+
+### `GET /resources`
+Query: `category` (`emergency`, `crisis`, `health`, `safety`, `housing`, `campus`), `q` (searches name and description).
+→ `200 {"resources": [Resource, ...], "categories": [...]}`
+
+Show `phone` on screen but **dial `dial_number`**. In demo mode it's the test number.
+
+## Emergency
+
+### `GET /emergency/config` (public)
+```json
+{
+  "demo_mode": true,
+  "notice": "ReportSDState does not replace 911. ...",
+  "demo_notice": "Demo mode: call buttons dial a test number, ...",
+  "campus_police": { "name": "SDSU University Police", "phone": "+16056885117", "dial_number": "+16055550100" },
+  "emergency_services": { "name": "Emergency Services", "phone": "911", "dial_number": "+16055550100" },
+  "crisis_line": { "name": "988 Suicide & Crisis Lifeline", "phone": "988", "dial_number": "+16055550100" },
+  "sos_hold_seconds": 2
+}
+```
+Show `notice` on the emergency screen (US-09), and `demo_notice` when it isn't null.
+
+### `POST /emergency/events` 🔒
+Call this when an emergency call button is used. It returns the number to dial.
+```json
+{ "action": "call_campus_police" }
+```
+`action`: `call_campus_police`, `call_911`, `call_crisis_line`, or `call_contact` (also needs `"contact_id"`). No location or free text is stored.
+→ `201 {"event": {"id", "action", "simulated", "created_at"}, "dial_number": "+16055550100", "message": "..."}` · `404` contact not yours · `422`
+
+If this request fails (offline, signed out), dial the `dial_number` from `/emergency/config` anyway. Never block an emergency call on the backend.
+
 ## Admin (maintainer role only)
 
 Students get `403`.
@@ -154,6 +190,11 @@ All reports. Query: `category`, `status`, `page`, `per_page`. Same response shap
 **Report**
 ```json
 { "id": 7, "reference_id": "RPT-7K2Q9M", "category": "maintenance", "status": "submitted", "location": "Hansen Hall 214", "details": "Heater not working", "created_at": "2026-10-19T15:04:05.123456Z" }
+```
+
+**Resource**
+```json
+{ "id": 2, "category": "emergency", "name": "SDSU University Police Department", "description": "...", "phone": "+16056885117", "sms": null, "url": "https://www.sdstate.edu/safety-security/university-police", "available_24_7": true, "verified_on": "2026-10-19", "dial_number": "+16055550100" }
 ```
 
 **User**
