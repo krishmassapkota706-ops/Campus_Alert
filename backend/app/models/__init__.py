@@ -1,16 +1,20 @@
 """SQLAlchemy models. Import from here so every table is registered with ``db``."""
 
+from .auth import CodePurpose, RevokedToken, VerificationCode
 from .report import Report, ReportCategory, ReportStatus, new_reference_id
 from .types import utcnow
 from .user import EmergencyContact, Role, User
 
 __all__ = [
+    "CodePurpose",
     "EmergencyContact",
     "Report",
     "ReportCategory",
     "ReportStatus",
+    "RevokedToken",
     "Role",
     "User",
+    "VerificationCode",
     "new_reference_id",
     "utcnow",
 ]
