@@ -81,6 +81,8 @@ class TestingConfig(Config):
     JWT_SECRET_KEY = "test-jwt-secret-key-that-is-long-enough"  # noqa: S105 (test-only value)
     MAIL_BACKEND = "memory"
     RATELIMIT_ENABLED = False
+    # Fast, weak hashing so the suite runs quickly. Never use outside tests.
+    PASSWORD_HASH_METHOD = "pbkdf2:sha256:1000"  # noqa: S105 (algorithm name)
 
 
 class ProductionConfig(Config):
