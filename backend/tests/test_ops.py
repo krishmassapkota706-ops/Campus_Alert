@@ -148,3 +148,27 @@ def test_proxy_fix_uses_forwarded_client_ip():
 
     res = app.test_client().get("/whoami", headers={"X-Forwarded-For": "203.0.113.7"})
     assert res.get_json()["ip"] == "203.0.113.7"
+
+
+def test_proxy_fix_with_two_proxies_picks_client_not_spoofed_value():
+    """Cloudflare Tunnel -> Caddy -> API: the client IP is second from the right."""
+
+    class TwoProxyConfig(TestingConfig):
+        TRUSTED_PROXIES = 2
+
+    app = create_app(TwoProxyConfig)
+
+    @app.get("/whoami")
+    def whoami():
+        from flask import request
+
+        return {"ip": request.remote_addr, "scheme": request.scheme}
+
+    res = app.test_client().get(
+        "/whoami",
+        headers={
+            "X-Forwarded-For": "6.6.6.6, 203.0.113.7, 172.18.0.4",  # spoofed, real, cloudflared
+            "X-Forwarded-Proto": "https",
+        },
+    )
+    assert res.get_json() == {"ip": "203.0.113.7", "scheme": "https"}

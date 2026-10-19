@@ -1,6 +1,8 @@
 # Deploying the backend (home server)
 
-The proposal hosts the API and SQLite database on a team member's home server for development and the demo. This guide covers a single machine running Windows or Linux.
+The proposal hosts the API and SQLite database on a team member's home server for development and the demo. This guide covers a single machine running Windows or Linux without containers.
+
+**Using Docker?** Use [`deploy/README.md`](../deploy/README.md) instead. It runs the site, the API, and a Cloudflare Tunnel as one Compose project with resource limits.
 
 ## 1. Install
 
