@@ -104,6 +104,41 @@ Any of `name`, `phone`, `relationship`. → `200 Contact` · `404` · `422`
 ### `DELETE /contacts/<id>` 🔒
 `204` · `404`
 
+## Reports
+
+Categories: `maintenance` (dorm / facilities), `crime` (non-emergency), `emergency` (quick report after SOS), `other`. There is **no health category**: health and mental-health help is redirect-only (see Resources). Statuses: `submitted`, `in_review`, `resolved`.
+
+The reporter is stored encrypted. Students can only see their own reports.
+
+### `POST /reports` 🔒
+```json
+{ "category": "maintenance", "location": "Hansen Hall 214", "details": "Heater not working" }
+```
+`location` up to 200 characters, `details` up to 1000.
+→ `201 {"report": Report, "message": "Report received. Your reference ID is RPT-7K2Q9M."}` · `422`
+
+Only show a confirmation after this returns `201`.
+
+### `GET /reports` 🔒
+Your own reports, newest first. Query: `category`, `page` (default 1), `per_page` (default 20, max 100).
+→ `200 {"reports": [Report, ...], "page": 1, "per_page": 20, "total": 2}`
+
+### `GET /reports/<reference_id>` 🔒
+`200 Report` · `404` (not found or not yours)
+
+## Admin (maintainer role only)
+
+Students get `403`.
+
+### `GET /admin/reports` 🔒
+All reports. Query: `category`, `status`, `page`, `per_page`. Same response shape as `GET /reports`.
+
+### `GET /admin/reports/<reference_id>` 🔒
+`200 Report + {"reporter": {"id", "name", "email", "phone"}}` (reporter is `null` if the account was deleted)
+
+### `PATCH /admin/reports/<reference_id>` 🔒
+`{ "status": "in_review" }` → `200 Report`
+
 ## Shapes
 
 **Tokens**
@@ -114,6 +149,11 @@ Any of `name`, `phone`, `relationship`. → `200 Contact` · `404` · `422`
 **Contact**
 ```json
 { "id": 3, "name": "Mom", "phone": "+16055550199", "relationship": "Parent" }
+```
+
+**Report**
+```json
+{ "id": 7, "reference_id": "RPT-7K2Q9M", "category": "maintenance", "status": "submitted", "location": "Hansen Hall 214", "details": "Heater not working", "created_at": "2026-10-19T15:04:05.123456Z" }
 ```
 
 **User**
