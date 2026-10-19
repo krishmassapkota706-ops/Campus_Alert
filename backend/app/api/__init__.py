@@ -2,14 +2,14 @@
 
 from flask import Blueprint, Flask
 
-from . import auth, contacts, health, me, reports
+from . import auth, contacts, emergency, health, me, reports, resources
 
 API_PREFIX = "/api/v1"
 
 
 def register_blueprints(app: Flask) -> None:
     api = Blueprint("api", __name__, url_prefix=API_PREFIX)
-    for module in (health, auth, me, contacts, reports):
+    for module in (health, auth, me, contacts, reports, resources, emergency):
         api.register_blueprint(module.bp)
     api.register_blueprint(reports.admin_bp)
     app.register_blueprint(api)
