@@ -46,7 +46,7 @@ backend/
     extensions.py   SQLAlchemy instance (SQLite foreign keys enabled)
     models/         users, emergency_contacts, reports
     security/       JWT setup, role_required, field-level encryption
-    services/       business logic (auth, mailer) called by the API routes
+    services/       business logic called by the API routes (auth, reports, location, SMS, ...)
     data/           resources.json (SDSU resource directory, with sources)
     cli.py          init-db / seed-db / seed-resources commands
     seed.py         synthetic demo data
@@ -86,5 +86,7 @@ All timestamps are stored in UTC and returned as ISO-8601 with a `Z` suffix.
 ## Demo mode
 
 `DEMO_MODE=true` (the default) swaps every number the app would dial for `DEMO_CALL_NUMBER`, so no real call reaches UPD, 911, or 988 during grading. Displayed numbers stay real. Set `DEMO_CALL_NUMBER` to a phone the team controls.
+
+Location texts use `SMS_MODE=mock` unless you set `SMS_MODE=twilio` with Twilio credentials **and** turn demo mode off. Coordinates are never stored or logged.
 
 To update the resource directory, edit `app/data/resources.json` and run `flask --app wsgi seed-resources --replace`.

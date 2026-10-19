@@ -14,6 +14,7 @@ from .extensions import db, limiter
 from .security.auth import init_jwt
 from .security.crypto import FieldCipher
 from .services.mailer import init_mailer
+from .services.sms import init_sms
 
 
 def create_app(config: type[Config] | None = None) -> Flask:
@@ -32,6 +33,7 @@ def create_app(config: type[Config] | None = None) -> Flask:
     init_jwt(app)
     limiter.init_app(app)
     init_mailer(app)
+    init_sms(app)
     CORS(app, resources={API_PREFIX + "/*": {"origins": app.config["CORS_ORIGINS"]}})
 
     register_error_handlers(app)

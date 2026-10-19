@@ -21,15 +21,17 @@ class APIError(Exception):
         code: str,
         message: str,
         fields: dict[str, str] | None = None,
+        extra: dict | None = None,
     ):
         super().__init__(message)
         self.status = status
         self.code = code
         self.message = message
         self.fields = fields
+        self.extra = extra or {}
 
     def to_response(self):
-        body = {"code": self.code, "message": self.message}
+        body = {"code": self.code, "message": self.message, **self.extra}
         if self.fields:
             body["fields"] = self.fields
         return jsonify(error=body), self.status

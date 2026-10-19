@@ -87,3 +87,12 @@ def test_production_refuses_to_start_without_secrets(monkeypatch):
     monkeypatch.delenv("SECRET_KEY", raising=False)
     with pytest.raises(RuntimeError, match="SECRET_KEY"):
         create_app(ProductionConfig)
+
+
+def test_production_requires_twilio_credentials_for_live_sms(monkeypatch):
+    for name in ("SECRET_KEY", "JWT_SECRET_KEY", "DATA_ENCRYPTION_KEY", "DATA_HMAC_KEY"):
+        monkeypatch.setenv(name, "set")
+    monkeypatch.setattr(ProductionConfig, "SMS_MODE", "twilio")
+    monkeypatch.setattr(ProductionConfig, "DEMO_MODE", False)
+    with pytest.raises(RuntimeError, match="TWILIO_ACCOUNT_SID"):
+        ProductionConfig.validate()
